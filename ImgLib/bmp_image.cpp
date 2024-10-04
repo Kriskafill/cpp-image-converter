@@ -29,10 +29,13 @@ namespace img_lib {
         uint32_t colorsUsed; // Количество использованных цветов
         uint32_t importantColors; // Количество значимых цветов
     } PACKED_STRUCT_END;
+    
+    static const int COLORS_COUNT = 3;
+    static const int PADDING_MULTIPLIER = 4;
 
     // Функция вычисления отступа по ширине
     static int GetBMPStride(int w) {
-        return 4 * ((w * 3 + 3) / 4);
+        return PADDING_MULTIPLIER * ((w * COLORS_COUNT + COLORS_COUNT) / PADDING_MULTIPLIER);
     }
 
     bool SaveBMP(const Path& file, const Image& image) {
@@ -103,8 +106,12 @@ namespace img_lib {
         BitmapInfoHeader infoHeader;
 
         // Читаем заголовки BMP
-        ifs.read(reinterpret_cast<char*>(&fileHeader), sizeof(fileHeader));
-        ifs.read(reinterpret_cast<char*>(&infoHeader), sizeof(infoHeader));
+        if (!ifs.read(reinterpret_cast<char*>(&fileHeader), sizeof(fileHeader))) {
+            return {};
+        }
+        if (!ifs.read(reinterpret_cast<char*>(&infoHeader), sizeof(infoHeader))) {
+            return {};
+        }
 
         // Проверка заголовков
         if (fileHeader.signature[0] != 'B' || fileHeader.signature[1] != 'M') {
