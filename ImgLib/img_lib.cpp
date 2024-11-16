@@ -26,10 +26,8 @@ int Image::GetHeight() const {
     return height_;
 }
 
-// шаг задаёт смещение соседних строк изображения
-// он обычно совпадает с width, но может быть больше
 int Image::GetStep() const {
     return step_;
 }
 
-}  // namespace img_lib
+}

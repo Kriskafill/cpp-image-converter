@@ -34,23 +34,16 @@ bool SavePPM(const Path& file, const Image& image) {
 }
 
 Image LoadPPM(const Path& file) {
-    // открываем поток с флагом ios::binary
-    // поскольку будем читать данные в двоичном формате
+
     ifstream ifs(file, ios::binary);
     std::string sign;
     int w, h, color_max;
-
-    // читаем заголовок: он содержит формат, размеры изображения
-    // и максимальное значение цвета
     ifs >> sign >> w >> h >> color_max;
 
-    // мы поддерживаем изображения только формата P6
-    // с максимальным значением цвета 255
     if (sign != PPM_SIG || color_max != PPM_MAX) {
         return {};
     }
 
-    // пропускаем один байт - это конец строки
     const char next = ifs.get();
     if (next != '\n') {
         return {};
@@ -73,4 +66,4 @@ Image LoadPPM(const Path& file) {
     return result;
 }
 
-}  // namespace img_lib
+}
